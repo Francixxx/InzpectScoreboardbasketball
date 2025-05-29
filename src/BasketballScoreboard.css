@@ -1,0 +1,964 @@
+/* Main container adjustments */
+.scoreboard-container {
+  max-width: 100vw;
+  min-height: 100vh;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Header adjustments */
+.scoreboard-header h1 {
+  font-size: 1.8rem; /* Reduced from larger size */
+  margin: 10px 0;
+  padding: 5px;
+}
+
+/* Main display adjustments */
+.main-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0; /* Reduced margin */
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  gap: 10px;
+}
+
+/* Team sections - make them more compact */
+.team-section {
+  flex: 1;
+  text-align: center;
+  min-width: 0; /* Allow shrinking */
+}
+
+.team-name-input {
+  font-size: 1.2rem; /* Slightly smaller */
+  padding: 5px 8px;
+  margin-bottom: 8px;
+  width: 100%;
+  max-width: 150px;
+}
+
+.score-display {
+  font-size: 3.5rem; /* Reduced from larger size */
+  margin: 8px 0;
+}
+
+.foul-display {
+  margin-top: 8px;
+}
+
+.foul-count {
+  font-size: 1.5rem;
+}
+
+/* Center section adjustments */
+.center-section {
+  flex: 1.5;
+  text-align: center;
+  padding: 0 15px;
+}
+
+.game-clock {
+  margin-bottom: 15px;
+}
+
+/* Adjust time display for better fit */
+.time-display {
+  font-size: 4rem; /* Reduced from 5.5rem */
+  padding: 10px 15px; /* Reduced padding */
+  min-width: 280px; /* Reduced width */
+  text-shadow: 0 0 10px #ffffff, 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.time-input {
+  font-size: 4rem; /* Reduced from 5.5rem */
+  padding: 10px 15px; /* Reduced padding */
+  width: 280px; /* Reduced width */
+}
+
+.period-display {
+  font-size: 1.2rem;
+  margin-top: 5px;
+}
+
+/* Shot clock adjustments */
+.shot-clock {
+  margin-top: 10px;
+}
+
+.shot-time-display {
+  font-size: 2rem; /* Slightly smaller */
+  padding: 5px 8px;
+}
+
+.shot-input {
+  font-size: 2rem;
+  padding: 5px 8px;
+  width: 70px;
+}
+
+.shot-label {
+  font-size: 0.9rem;
+  margin-top: 3px;
+}
+
+/* Controls container - make more compact */
+.controls-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px; /* Reduced gap */
+  margin: 15px 0;
+}
+
+.control-panel {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 12px; /* Reduced padding */
+  border-radius: 8px;
+}
+
+.control-panel h3 {
+  font-size: 1rem; /* Smaller headers */
+  margin-bottom: 8px;
+}
+
+.control-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px; /* Smaller gaps */
+  justify-content: center;
+}
+
+.control-buttons button {
+  padding: 6px 10px; /* Smaller buttons */
+  font-size: 0.85rem;
+  min-width: 50px;
+}
+
+/* Score controls adjustments */
+.score-controls, .foul-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.team-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.team-controls span {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* Keyboard help adjustments */
+.keyboard-help-toggle {
+  text-align: center;
+  margin: 15px 0 10px 0;
+}
+
+.help-btn {
+  padding: 8px 15px;
+  font-size: 0.9rem;
+}
+
+.keyboard-help-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.help-content {
+  background: #1a1a1a;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.help-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.help-section h4 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.help-section p {
+  font-size: 0.85rem;
+  margin: 3px 0;
+}
+
+/* Buzzer indicator */
+.buzzer-indicator {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem; /* Smaller buzzer text */
+  z-index: 999;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1200px) {
+  .main-display {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .center-section {
+    order: -1;
+    padding: 0;
+  }
+  
+  .controls-container {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .scoreboard-container {
+    padding: 5px;
+  }
+  
+  .scoreboard-header h1 {
+    font-size: 1.4rem;
+  }
+  
+  .time-display {
+    font-size: 3rem;
+    min-width: 220px;
+    padding: 8px 12px;
+  }
+  
+  .time-input {
+    font-size: 3rem;
+    width: 220px;
+    padding: 8px 12px;
+  }
+  
+  .score-display {
+    font-size: 2.5rem;
+  }
+  
+  .controls-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  
+  .control-panel {
+    padding: 8px;
+  }
+  
+  .help-content {
+    padding: 15px;
+  }
+  
+  .help-sections {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .time-display {
+    font-size: 2.5rem;
+    min-width: 200px;
+  }
+  
+  .time-input {
+    font-size: 2.5rem;
+    width: 200px;
+  }
+  
+  .score-display {
+    font-size: 2rem;
+  }
+  
+  .controls-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .help-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Ensure no horizontal overflow */
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Main Display */
+.main-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(145deg, #2c3e50, #34495e);
+  border-radius: 20px;
+  padding: 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 3px solid #f39c12;
+}
+
+.team-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  min-width: 250px;
+}
+
+.team-name-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid #f39c12;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  width: 200px;
+  backdrop-filter: blur(10px);
+}
+
+.team-name-input:focus {
+  outline: none;
+  border-color: #e67e22;
+  box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+}
+
+.score-display {
+  font-size: 8rem;
+  font-weight: bold;
+  color: #f39c12;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+  margin-bottom: 20px;
+  min-width: 150px;
+  text-align: center;
+}
+
+.foul-display {
+  text-align: center;
+}
+
+.foul-display span {
+  font-size: 1.2rem;
+  color: #bdc3c7;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.foul-count {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #e74c3c;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.possession-indicator {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 3rem;
+  color: #f39c12;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.2); }
+}
+
+/* Center Section */
+.center-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.game-clock {
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 20px 30px;
+  border-radius: 15px;
+  border: 2px solid #3498db;
+}
+
+/* Update the time-display to make it bigger and clickable */
+/* Update the time-display for white color and larger size */
+.time-display {
+  font-size: 5.5rem; /* Increased from 4rem */
+  font-weight: bold;
+  color: #ffffff; /* Changed from #00ff00 to white */
+  text-shadow: 0 0 2px #ffffff, 0 0 30px rgba(255, 255, 255, 0.5); /* White glow effect */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  padding: 15px 25px; /* Increased padding */
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1); /* White tint instead of green */
+  min-width: 350px; /* Increased width for larger text */
+  text-align: center;
+}
+
+.time-display:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #ffffff; /* White border on hover */
+  transform: scale(1.02);
+  text-shadow: 0 0 20px #ffffff, 0 0 40px rgba(255, 255, 255, 0.7); /* Stronger glow on hover */
+}
+
+/* Update the time input for white color and larger size */
+.time-input {
+  font-size: 5.5rem; /* Increased from 4rem */
+  font-weight: bold;
+  color: #ffffff; /* Changed to white */
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #ffffff; /* White border */
+  border-radius: 10px;
+  padding: 15px 25px; /* Increased padding */
+  text-align: center;
+  outline: none;
+  width: 350px; /* Increased width */
+  font-family: 'Courier New', monospace;
+}
+
+.time-input:focus {
+  box-shadow: 0 0 25px #ffffff, 0 0 50px rgba(255, 255, 255, 0.3); /* White glow */
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Update responsive design for larger sizes */
+@media (max-width: 768px) {
+  .time-display {
+    font-size: 4rem; /* Larger than before even on mobile */
+    min-width: 280px;
+    padding: 12px 20px;
+  }
+  
+  .time-input {
+    font-size: 4rem;
+    width: 280px;
+    padding: 12px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .time-display {
+    font-size: 3.5rem;
+    min-width: 250px;
+    padding: 10px 15px;
+  }
+  
+  .time-input {
+    font-size: 3.5rem;
+    width: 250px;
+    padding: 10px 15px;
+  }
+}
+.time-input:focus {
+  box-shadow: 0 0 20px #00ff00;
+  background: rgba(0, 255, 0, 0.1);
+}
+
+/* Make shot clock clickable */
+.shot-time-display {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.shot-time-display:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #fff;
+  transform: scale(1.05);
+}
+
+/* Style for the editable shot clock input */
+.shot-input {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid #fff;
+  border-radius: 5px;
+  padding: 5px 10px;
+  text-align: center;
+  outline: none;
+  width: 80px;
+  font-family: 'Courier New', monospace;
+}
+
+.shot-input:focus {
+  box-shadow: 0 0 15px #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Remove spinner arrows from number input */
+.shot-input::-webkit-outer-spin-button,
+.shot-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.shot-input[type=number] {
+  -moz-appearance: textfield;
+}
+.period-display {
+  font-size: 1.5rem;
+  color: #bdc3c7;
+  font-weight: bold;
+}
+
+.shot-clock {
+  text-align: center;
+  background: rgba(231, 76, 60, 0.2);
+  padding: 15px 25px;
+  border-radius: 15px;
+  border: 2px solid #e74c3c;
+}
+
+.shot-time-display {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #e74c3c;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin-bottom: 5px;
+  font-family: 'Courier New', monospace;
+}
+
+.shot-label {
+  font-size: 1rem;
+  color: #bdc3c7;
+  font-weight: bold;
+}
+
+/* Controls Container */
+.controls-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.control-panel {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.control-panel h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #f39c12;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.control-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.control-buttons button {
+  background: linear-gradient(145deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 60px;
+}
+
+.control-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+}
+
+.control-buttons button:active {
+  transform: translateY(0);
+}
+
+.start-btn {
+  background: linear-gradient(145deg, #27ae60, #2ecc71) !important;
+}
+
+.start-btn:hover {
+  box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4) !important;
+}
+
+.stop-btn {
+  background: linear-gradient(145deg, #e74c3c, #c0392b) !important;
+}
+
+.stop-btn:hover {
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4) !important;
+}
+
+.reset-btn {
+  background: linear-gradient(145deg, #f39c12, #e67e22) !important;
+}
+
+.reset-btn:hover {
+  box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4) !important;
+}
+
+/* Score and Foul Controls */
+.score-controls, .foul-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.team-controls {
+  flex: 1;
+  text-align: center;
+}
+
+.team-controls span {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #f39c12;
+  font-size: 1.1rem;
+}
+
+/* Buzzer Indicator */
+.buzzer-indicator {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  font-weight: bold;
+  color: #e74c3c;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 30px 60px;
+  border-radius: 20px;
+  border: 4px solid #e74c3c;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+
+.buzzer-active {
+  opacity: 1;
+  animation: buzzer-flash 0.2s ease-in-out 5;
+}
+
+@keyframes buzzer-flash {
+  0%, 100% { background: rgba(0, 0, 0, 0.8); }
+  50% { background: rgba(231, 76, 60, 0.3); }
+}
+
+/* Keyboard Help */
+.keyboard-help-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+}
+
+.help-btn {
+  background: linear-gradient(145deg, #9b59b6, #8e44ad);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
+}
+
+.help-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(155, 89, 182, 0.5);
+}
+
+.keyboard-help-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1001;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px);
+}
+
+.help-content {
+  background: linear-gradient(145deg, #2c3e50, #34495e);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 900px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 3px solid #f39c12;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.help-content h3 {
+  text-align: center;
+  color: #f39c12;
+  font-size: 2rem;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.help-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.help-header h3 {
+  margin: 0;
+  flex: 1;
+}
+
+.close-help-btn {
+  background: linear-gradient(145deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+}
+
+.close-help-btn:hover {
+  transform: translateY(-2px) scale(1.1);
+  box-shadow: 0 6px 15px rgba(231, 76, 60, 0.5);
+}
+
+.help-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.help-section {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.help-section h4 {
+  color: #3498db;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  text-align: center;
+  border-bottom: 1px solid rgba(52, 152, 219, 0.3);
+  padding-bottom: 5px;
+}
+
+.help-section p {
+  margin: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ecf0f1;
+}
+
+.help-section kbd {
+  background: linear-gradient(145deg, #34495e, #2c3e50);
+  color: #f39c12;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 0.9rem;
+  border: 1px solid #f39c12;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  min-width: 60px;
+  text-align: center;
+}
+
+.help-note {
+  background: rgba(231, 76, 60, 0.2);
+  border: 1px solid #e74c3c;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.help-note p {
+  color: #ecf0f1;
+  margin: 5px 0;
+  font-style: italic;
+}
+
+.help-note kbd {
+  background: linear-gradient(145deg, #34495e, #2c3e50);
+  color: #f39c12;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: 0.8rem;
+  border: 1px solid #f39c12;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .main-display {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .score-display {
+    font-size: 6rem;
+  }
+  
+  .time-display {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .scoreboard-header h1 {
+    font-size: 2rem;
+  }
+  
+  .main-display {
+    padding: 20px;
+  }
+  
+  .score-display {
+    font-size: 4rem;
+  }
+  
+  .time-display {
+    font-size: 2.5rem;
+  }
+  
+  .shot-time-display {
+    font-size: 2rem;
+  }
+  
+  .controls-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .score-controls, .foul-controls {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .team-name-input {
+    width: 150px;
+    font-size: 1.2rem;
+  }
+  
+  .score-display {
+    font-size: 3rem;
+  }
+  
+  .control-buttons {
+    justify-content: center;
+  }
+  
+  .control-buttons button {
+    min-width: 50px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+  
+  .help-content {
+    margin: 20px;
+    padding: 20px;
+    max-height: 90vh;
+  }
+  
+  .help-sections {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .help-content h3 {
+    font-size: 1.5rem;
+  }
+  
+  .keyboard-help-toggle {
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .help-btn {
+    padding: 10px 15px;
+    font-size: 0.8rem;
+  }
+  
+  .close-help-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+  
+  .help-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .help-header h3 {
+    text-align: center;
+  }
+}
