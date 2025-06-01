@@ -15,11 +15,12 @@ const Scoreboard = () => {
   const [shotTimeInput, setShotTimeInput] = useState('24');
   const [isEditingGameTime, setIsEditingGameTime] = useState(false);
   const [isEditingShotTime, setIsEditingShotTime] = useState(false);
+  const [homeTimeouts, setHomeTimeouts] = useState(0);
+  const [awayTimeouts, setAwayTimeouts] = useState(0);
+
   
   // Game clock
-
-// Update the game time state to use hundredths of seconds
-const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundredths of seconds // 12 minutes in seconds
+  const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundredths of seconds
   const [isGameRunning, setIsGameRunning] = useState(false);
   
   // Shot clock
@@ -32,31 +33,36 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
   const gameTimerRef = useRef(null);
   const shotTimerRef = useRef(null);
   const buzzerRef = useRef(null);
-  const audioContextRef = useRef(null);
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
 
-  // Initialize Audio Context
+  // Audio elements for external sounds
+  const buzzerAudioRef = useRef(null);
+  const scoreAudioRef = useRef(null);
+  const audioContextRef = useRef(null);
+  // Initialize audio elements
   useEffect(() => {
-    // Create audio context on first user interaction
-    const initAudio = () => {
-      if (!audioContextRef.current) {
-        try {
-          audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-        } catch (error) {
-          console.log('Web Audio API not supported');
-        }
-      }
-    };
+  // Initialize Audio Context for generating sounds
+  const initAudio = () => {
+    try {
+      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (error) {
+      console.log('Audio context not supported:', error);
+    }
+  };
+  const handleFirstInteraction = () => {
+    initAudio();
+    document.removeEventListener('click', handleFirstInteraction);
+    document.removeEventListener('keydown', handleFirstInteraction);
+  };
 
-    // Add event listeners for user interaction
-    document.addEventListener('click', initAudio, { once: true });
-    document.addEventListener('keydown', initAudio, { once: true });
+  document.addEventListener('click', handleFirstInteraction);
+  document.addEventListener('keydown', handleFirstInteraction);
 
-    return () => {
-      document.removeEventListener('click', initAudio);
-      document.removeEventListener('keydown', initAudio);
-    };
-  }, []);
+  return () => {
+    document.removeEventListener('click', handleFirstInteraction);
+    document.removeEventListener('keydown', handleFirstInteraction);
+  };
+}, []);
 
   // Format time display
   const formatTime = (hundredths) => {
@@ -66,6 +72,7 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
     const centisecs = hundredths % 100;
     return `${mins}:${secs.toString().padStart(2, '0')}:${centisecs.toString().padStart(2, '0')}`;
   };
+
   const parseTimeInput = (timeString) => {
     const parts = timeString.split(':').map(num => parseInt(num) || 0);
     
@@ -82,7 +89,6 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
       return Math.max(0, parseInt(timeString) * 100 || 0);
     }
   };
-  
   
   const handleGameTimeEdit = () => {
     if (isEditingGameTime) {
@@ -118,13 +124,14 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
           }
           return prev - 1;
         });
-      }, 10); // Changed from 1000ms to 10ms for hundredths precision
+      }, 10); // 10ms for hundredths precision
     } else {
       clearInterval(gameTimerRef.current);
     }
     
     return () => clearInterval(gameTimerRef.current);
   }, [isGameRunning, gameTime]);
+
   // Shot clock timer effect
   useEffect(() => {
     if (isShotRunning && shotTime > 0) {
@@ -148,7 +155,6 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
   // Keyboard controls
   useEffect(() => {
     const handleKeyPress = (event) => {
-      // Prevent default behavior for our keys
       const key = event.key.toLowerCase();
       
       // Don't trigger if user is typing in an input field
@@ -251,103 +257,173 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
       }
     };
 
-    // Add event listener
     document.addEventListener('keydown', handleKeyPress);
-    
-    // Cleanup
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
     };
   }, [isGameRunning, isShotRunning, possession, showKeyboardHelp]);
 
-  // Play buzzer sound (visual indication + actual sound)
-  const playBuzzer = () => {
-    // Visual buzzer effect
-    if (buzzerRef.current) {
-      buzzerRef.current.classList.add('buzzer-active');
-      setTimeout(() => {
-        buzzerRef.current?.classList.remove('buzzer-active');
-      }, 1000);
-    }
+  // Play buzzer sound (visual indication + your custom sound)
+// Replace the playBuzzer function with this NBA arena-style buzzer:
+const playBuzzer = () => {
+  // Visual buzzer effect
+  if (buzzerRef.current) {
+    buzzerRef.current.classList.add('buzzer-active');
+    setTimeout(() => {
+      buzzerRef.current?.classList.remove('buzzer-active');
+    }, 1500);
+  }
 
-    // Audio buzzer sound
-    if (audioContextRef.current && audioContextRef.current.state === 'running') {
-      try {
-        // Create buzzer sound - harsh, attention-grabbing tone
-        const oscillator1 = audioContextRef.current.createOscillator();
-        const oscillator2 = audioContextRef.current.createOscillator();
-        const gainNode = audioContextRef.current.createGain();
-        const filterNode = audioContextRef.current.createBiquadFilter();
-
-        // Set up the buzzer frequencies (dissonant for attention)
-        oscillator1.frequency.setValueAtTime(400, audioContextRef.current.currentTime);
-        oscillator2.frequency.setValueAtTime(600, audioContextRef.current.currentTime);
+  // Generate NBA-style arena buzzer sound
+  if (audioContextRef.current) {
+    try {
+      const ctx = audioContextRef.current;
+      const currentTime = ctx.currentTime;
+      
+      // Create the main buzzer tone - sharp and penetrating like NBA arenas
+      const createMainBuzzer = () => {
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        const distortion = ctx.createWaveShaper();
+        const filter = ctx.createBiquadFilter();
         
-        // Configure filter for harsh buzzer sound
-        filterNode.type = 'lowpass';
-        filterNode.frequency.setValueAtTime(2000, audioContextRef.current.currentTime);
-        filterNode.Q.setValueAtTime(5, audioContextRef.current.currentTime);
-
-        // Set up gain envelope for buzzer pattern
-        gainNode.gain.setValueAtTime(0, audioContextRef.current.currentTime);
-        gainNode.gain.linearRampToValueAtTime(0.3, audioContextRef.current.currentTime + 0.01);
-        gainNode.gain.linearRampToValueAtTime(0.1, audioContextRef.current.currentTime + 0.1);
-        gainNode.gain.linearRampToValueAtTime(0.3, audioContextRef.current.currentTime + 0.15);
-        gainNode.gain.linearRampToValueAtTime(0.1, audioContextRef.current.currentTime + 0.25);
-        gainNode.gain.linearRampToValueAtTime(0.3, audioContextRef.current.currentTime + 0.3);
-        gainNode.gain.linearRampToValueAtTime(0, audioContextRef.current.currentTime + 1);
-
-        // Connect the audio graph
-        oscillator1.connect(filterNode);
-        oscillator2.connect(filterNode);
-        filterNode.connect(gainNode);
-        gainNode.connect(audioContextRef.current.destination);
-
-        // Start and stop the buzzer
-        oscillator1.start(audioContextRef.current.currentTime);
-        oscillator2.start(audioContextRef.current.currentTime);
-        oscillator1.stop(audioContextRef.current.currentTime + 1);
-        oscillator2.stop(audioContextRef.current.currentTime + 1);
-
-      } catch (error) {
-        console.log('Error playing buzzer sound:', error);
-      }
+        // Audio chain: oscillator -> distortion -> filter -> gain -> output
+        oscillator.connect(distortion);
+        distortion.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        
+        // Square wave for that sharp, cutting buzzer sound
+        oscillator.type = 'square';
+        oscillator.frequency.setValueAtTime(440, currentTime); // A4 - sharp and clear
+        
+        // Add slight distortion for arena speaker effect
+        const makeDistortionCurve = (amount) => {
+          const samples = 44100;
+          const curve = new Float32Array(samples);
+          const deg = Math.PI / 180;
+          for (let i = 0; i < samples; i++) {
+            const x = (i * 2) / samples - 1;
+            curve[i] = ((3 + amount) * x * 20 * deg) / (Math.PI + amount * Math.abs(x));
+          }
+          return curve;
+        };
+        distortion.curve = makeDistortionCurve(4);
+        distortion.oversample = '4x';
+        
+        // High-pass filter to make it sharp and cutting
+        filter.type = 'highpass';
+        filter.frequency.setValueAtTime(200, currentTime);
+        filter.Q.setValueAtTime(1, currentTime);
+        
+        // Sharp attack, sustain, quick release
+        gainNode.gain.setValueAtTime(0, currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.6, currentTime + 0.01);
+        gainNode.gain.setValueAtTime(0.5, currentTime + 1.2);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, currentTime + 1.3);
+        
+        oscillator.start(currentTime);
+        oscillator.stop(currentTime + 1.3);
+      };
+      
+      // Add harmonic at octave for fullness
+      const createHarmonic = () => {
+        const harmonic = ctx.createOscillator();
+        const harmonicGain = ctx.createGain();
+        const harmonicFilter = ctx.createBiquadFilter();
+        
+        harmonic.connect(harmonicFilter);
+        harmonicFilter.connect(harmonicGain);
+        harmonicGain.connect(ctx.destination);
+        
+        harmonic.type = 'square';
+        harmonic.frequency.setValueAtTime(880, currentTime); // Octave higher
+        
+        harmonicFilter.type = 'lowpass';
+        harmonicFilter.frequency.setValueAtTime(2000, currentTime);
+        
+        harmonicGain.gain.setValueAtTime(0, currentTime);
+        harmonicGain.gain.exponentialRampToValueAtTime(0.2, currentTime + 0.01);
+        harmonicGain.gain.setValueAtTime(0.15, currentTime + 1.2);
+        harmonicGain.gain.exponentialRampToValueAtTime(0.01, currentTime + 1.3);
+        
+        harmonic.start(currentTime);
+        harmonic.stop(currentTime + 1.3);
+      };
+      
+      // Add sub-harmonic for that deep arena rumble
+      const createSubHarmonic = () => {
+        const sub = ctx.createOscillator();
+        const subGain = ctx.createGain();
+        
+        sub.connect(subGain);
+        subGain.connect(ctx.destination);
+        
+        sub.type = 'sawtooth';
+        sub.frequency.setValueAtTime(220, currentTime); // Octave lower
+        
+        subGain.gain.setValueAtTime(0, currentTime);
+        subGain.gain.exponentialRampToValueAtTime(0.3, currentTime + 0.02);
+        subGain.gain.setValueAtTime(0.25, currentTime + 1.2);
+        subGain.gain.exponentialRampToValueAtTime(0.01, currentTime + 1.3);
+        
+        sub.start(currentTime);
+        sub.stop(currentTime + 1.3);
+      };
+      
+      // Create slight reverb effect for arena ambience
+      const createReverb = () => {
+        const convolver = ctx.createConvolver();
+        const reverbGain = ctx.createGain();
+        
+        // Create impulse response for reverb
+        const length = ctx.sampleRate * 0.3; // 300ms reverb
+        const impulse = ctx.createBuffer(2, length, ctx.sampleRate);
+        
+        for (let channel = 0; channel < 2; channel++) {
+          const channelData = impulse.getChannelData(channel);
+          for (let i = 0; i < length; i++) {
+            channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2);
+          }
+        }
+        
+        convolver.buffer = impulse;
+        
+        // Connect a separate oscillator through reverb
+        const reverbOsc = ctx.createOscillator();
+        reverbOsc.connect(convolver);
+        convolver.connect(reverbGain);
+        reverbGain.connect(ctx.destination);
+        
+        reverbOsc.type = 'square';
+        reverbOsc.frequency.setValueAtTime(440, currentTime);
+        
+        reverbGain.gain.setValueAtTime(0.1, currentTime);
+        reverbGain.gain.exponentialRampToValueAtTime(0.01, currentTime + 1.5);
+        
+        reverbOsc.start(currentTime);
+        reverbOsc.stop(currentTime + 1.3);
+      };
+      
+      // Create the full NBA arena buzzer sound
+      createMainBuzzer();
+      createHarmonic();
+      createSubHarmonic();
+      createReverb();
+      
+    } catch (error) {
+      console.log('Error playing buzzer sound:', error);
     }
-  };
+  }
+};
 
   // Play score sound effect
   const playScoreSound = (points) => {
-    if (audioContextRef.current && audioContextRef.current.state === 'running') {
-      try {
-        const oscillator = audioContextRef.current.createOscillator();
-        const gainNode = audioContextRef.current.createGain();
-
-        // Different tones for different point values
-        let frequency;
-        switch (points) {
-          case 1: frequency = 800; break;  // Free throw
-          case 2: frequency = 1000; break; // Field goal
-          case 3: frequency = 1200; break; // Three pointer
-          default: frequency = 600; break; // Subtract/other
-        }
-
-        oscillator.frequency.setValueAtTime(frequency, audioContextRef.current.currentTime);
-        oscillator.type = 'sine';
-
-        // Quick blip sound
-        gainNode.gain.setValueAtTime(0, audioContextRef.current.currentTime);
-        gainNode.gain.linearRampToValueAtTime(0.2, audioContextRef.current.currentTime + 0.01);
-        gainNode.gain.linearRampToValueAtTime(0, audioContextRef.current.currentTime + 0.15);
-
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContextRef.current.destination);
-
-        oscillator.start(audioContextRef.current.currentTime);
-        oscillator.stop(audioContextRef.current.currentTime + 0.15);
-
-      } catch (error) {
+    if (scoreAudioRef.current) {
+      scoreAudioRef.current.currentTime = 0; // Reset to beginning
+      scoreAudioRef.current.play().catch(error => {
         console.log('Error playing score sound:', error);
-      }
+      });
     }
   };
 
@@ -361,11 +437,10 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
 
   const resetGameClock = () => {
     setIsGameRunning(false);
-    const resetTime = isOvertime ? 5 * 60 * 100 : 12 * 60 * 100; // Convert to hundredths
+    const resetTime = isOvertime ? 5 * 60 * 100 : 12 * 60 * 100;
     setGameTime(resetTime);
     setGameTimeInput(formatTime(resetTime));
   };
-  
 
   // Shot clock controls
   const startStopShotClock = () => {
@@ -423,17 +498,33 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
       setAwayFouls(prev => Math.max(0, prev - 1));
     }
   };
+// Timeout controls
+const addTimeout = (team) => {
+  if (team === 'home') {
+    setHomeTimeouts(prev => Math.min(7, prev + 1));
+  } else {
+    setAwayTimeouts(prev => Math.min(7, prev + 1));
+  }
+};
+
+const subtractTimeout = (team) => {
+  if (team === 'home') {
+    setHomeTimeouts(prev => Math.max(0, prev - 1));
+  } else {
+    setAwayTimeouts(prev => Math.max(0, prev - 1));
+  }
+};
 
   // Game state controls
   const nextPeriod = () => {
     if (period < 4) {
       setPeriod(prev => prev + 1);
-      setGameTime(12 * 60 * 100); // Convert to hundredths
+      setGameTime(12 * 60 * 100);
       setIsOvertime(false);
     } else if (!isOvertime) {
       setIsOvertime(true);
       setPeriod(5);
-      setGameTime(5 * 60 * 100); // Convert to hundredths
+      setGameTime(5 * 60 * 100);
     }
     setIsGameRunning(false);
     setShotTime(24);
@@ -446,7 +537,7 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
     setHomeFouls(0);
     setAwayFouls(0);
     setPeriod(1);
-    setGameTime(12 * 60 * 100); // Convert to hundredths
+    setGameTime(12 * 60 * 100);
     setShotTime(24);
     setIsGameRunning(false);
     setIsShotRunning(false);
@@ -479,74 +570,78 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
             <div className="foul-count">{awayFouls}</div>
           </div>
           {possession === 'away' && <div className="possession-indicator">●</div>}
+          <div className="timeout-display">
+        <span>TIMEOUTS</span>
+        <div className="timeout-count">{awayTimeouts}</div>
+      </div>
+
         </div>
 
         {/* Center Info */}
-   
-<div className="center-section">
-  <div className="game-clock">
-    <div className="period-display">
-      {isOvertime ? 'OT' : `QUARTER ${period}`}
-    </div>
-    {isEditingGameTime ? (
-      <input
-        type="text"
-        value={gameTimeInput}
-        onChange={(e) => setGameTimeInput(e.target.value)}
-        onBlur={handleGameTimeEdit}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') handleGameTimeEdit();
-          if (e.key === 'Escape') {
-            setIsEditingGameTime(false);
-            setGameTimeInput(formatTime(gameTime));
-          }
-        }}
-        className="time-input"
-        placeholder="MM:SS:CC"
-        autoFocus
-      />
-    ) : (
-      <div 
-        className="time-display" 
-        onClick={handleGameTimeEdit}
-        title="Click to edit time"
-      >
-        {formatTime(gameTime)}
-      </div>
-    )}
-  </div>
-  
-  <div className="shot-clock">
-    {isEditingShotTime ? (
-      <input
-        type="number"
-        value={shotTimeInput}
-        onChange={(e) => setShotTimeInput(e.target.value)}
-        onBlur={handleShotTimeEdit}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') handleShotTimeEdit();
-          if (e.key === 'Escape') {
-            setIsEditingShotTime(false);
-            setShotTimeInput(shotTime.toString());
-          }
-        }}
-        className="shot-input"
-        min="0"
-        max="24"
-        autoFocus
-      />
-    ) : (
-      <div 
-        className="shot-time-display" 
-        onClick={handleShotTimeEdit}
-        title="Click to edit shot clock"
-      >
-        {shotTime}
-      </div>
-    )}
-    <div className="shot-label">SHOT CLOCK</div>
-  </div>
-</div>
+        <div className="center-section">
+          <div className="game-clock">
+            <div className="period-display">
+              {isOvertime ? 'OT' : `QUARTER ${period}`}
+            </div>
+            {isEditingGameTime ? (
+              <input
+                type="text"
+                value={gameTimeInput}
+                onChange={(e) => setGameTimeInput(e.target.value)}
+                onBlur={handleGameTimeEdit}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleGameTimeEdit();
+                  if (e.key === 'Escape') {
+                    setIsEditingGameTime(false);
+                    setGameTimeInput(formatTime(gameTime));
+                  }
+                }}
+                className="time-input"
+                placeholder="MM:SS:CC"
+                autoFocus
+              />
+            ) : (
+              <div 
+                className="time-display" 
+                onClick={handleGameTimeEdit}
+                title="Click to edit time"
+              >
+                {formatTime(gameTime)}
+              </div>
+            )}
+          </div>
+          
+          <div className="shot-clock">
+            {isEditingShotTime ? (
+              <input
+                type="number"
+                value={shotTimeInput}
+                onChange={(e) => setShotTimeInput(e.target.value)}
+                onBlur={handleShotTimeEdit}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleShotTimeEdit();
+                  if (e.key === 'Escape') {
+                    setIsEditingShotTime(false);
+                    setShotTimeInput(shotTime.toString());
+                  }
+                }}
+                className="shot-input"
+                min="0"
+                max="24"
+                autoFocus
+              />
+            ) : (
+              <div 
+                className="shot-time-display" 
+                onClick={handleShotTimeEdit}
+                title="Click to edit shot clock"
+              >
+                {shotTime}
+              </div>
+            )}
+            <div className="shot-label">SHOT CLOCK</div>
+          </div>
+        </div>
 
         {/* Home Team */}
         <div className="team-section">
@@ -562,8 +657,13 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
             <span>FOULS</span>
             <div className="foul-count">{homeFouls}</div>
           </div>
+          <div className="timeout-display">
+  <span>TIMEOUTS</span>
+  <div className="timeout-count">{homeTimeouts}</div>
+</div>
           {possession === 'home' && <div className="possession-indicator">●</div>}
         </div>
+
       </div>
 
       {/* Control Panels */}
@@ -637,6 +737,28 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
             </div>
           </div>
         </div>
+        {/* Timeout Controls */}
+<div className="control-panel">
+  <h3>TIMEOUTS</h3>
+  <div className="timeout-controls">
+    <div className="team-controls">
+      <span>{awayTeamName}</span>
+      <div className="control-buttons">
+        <button onClick={() => addTimeout('away')}>+</button>
+        <button onClick={() => subtractTimeout('away')}>-</button>
+      </div>
+    </div>
+    <div className="team-controls">
+      <span>{homeTeamName}</span>
+      <div className="control-buttons">
+        <button onClick={() => addTimeout('home')}>+</button>
+        <button onClick={() => subtractTimeout('home')}>-</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
         {/* Possession & Game Controls */}
         <div className="control-panel">
@@ -732,7 +854,7 @@ const [gameTime, setGameTime] = useState(12 * 60 * 100); // 12 minutes in hundre
             <div className="help-note">
               <p>💡 Tip: Keyboard shortcuts don't work when typing in team name fields</p>
               <p>🚪 Click outside this panel or press <kbd>ESC</kbd> to close</p>
-              <p>🔊 Buzzer sound will activate after first user interaction</p>
+              <p>🔊 Custom buzzer sounds will play automatically</p>
             </div>
           </div>
         </div>
