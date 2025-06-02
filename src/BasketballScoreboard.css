@@ -74,9 +74,9 @@
 }
 
 .time-input {
-  font-size: 4rem; /* Reduced from 5.5rem */
-  padding: 10px 15px; /* Reduced padding */
-  width: 280px; /* Reduced width */
+  font-size: 4.4rem; 
+  padding: 10px 15px;
+  width: 280px; 
 }
 
 .period-display {
@@ -86,22 +86,22 @@
 
 /* Shot clock adjustments */
 .shot-clock {
-  margin-top: 10px;
+  margin-top: 0px;
 }
 
 .shot-time-display {
-  font-size: 2rem; /* Slightly smaller */
+  font-size: 5.5rem; /* Slightly smaller */
   padding: 5px 8px;
 }
 
 .shot-input {
-  font-size: 2rem;
+  font-size: 4rem;
   padding: 5px 8px;
   width: 70px;
 }
 
 .shot-label {
-  font-size: 0.9rem;
+  font-size: 1.9rem;
   margin-top: 3px;
 }
 
@@ -407,7 +407,7 @@ body, html {
 .game-clock {
   text-align: center;
   background: rgba(0, 0, 0, 0.3);
-  padding: 20px 30px;
+  padding: 25px 50px;
   border-radius: 15px;
   border: 2px solid #3498db;
 }
@@ -459,7 +459,7 @@ body, html {
 /* Update responsive design for larger sizes */
 @media (max-width: 768px) {
   .time-display {
-    font-size: 4rem; /* Larger than before even on mobile */
+    font-size:5rem; /* Larger than before even on mobile */
     min-width: 280px;
     padding: 12px 20px;
   }
@@ -548,7 +548,7 @@ body, html {
 }
 
 .shot-time-display {
-  font-size: 3rem;
+  font-size: 7rem;
   font-weight: bold;
   color: #e74c3c;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
