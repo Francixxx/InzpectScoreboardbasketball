@@ -226,6 +226,20 @@ const Scoreboard = () => {
         case 'm':
           subtractFoul('home');
           break;
+
+        // Timeout Controls (F, G for away, J, L for home)
+        case 'f':
+          addTimeout('away');
+          break;
+        case 'g':
+          subtractTimeout('away');
+          break;
+        case 'j':
+          addTimeout('home');
+          break;
+        case 'l':
+          subtractTimeout('home');
+          break;
           
         // Game Controls
         case 'p':
@@ -841,6 +855,14 @@ const subtractTimeout = (team) => {
                 <p><kbd>K</kbd> {homeTeamName} +Foul</p>
                 <p><kbd>M</kbd> {homeTeamName} -Foul</p>
               </div>
+
+              <div className="help-section">
+              <h4>Timeouts</h4>
+              <p><kbd>F</kbd> {awayTeamName} +Timeout</p>
+              <p><kbd>G</kbd> {awayTeamName} -Timeout</p>
+              <p><kbd>J</kbd> {homeTeamName} +Timeout</p>
+              <p><kbd>L</kbd> {homeTeamName} -Timeout</p>
+            </div>
               
               <div className="help-section">
                 <h4>Game Control</h4>
