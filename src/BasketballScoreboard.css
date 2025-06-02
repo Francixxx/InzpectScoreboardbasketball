@@ -457,9 +457,9 @@ body, html {
 }
 
 /* Update responsive design for larger sizes */
-@media (max-width: 768px) {
+@media (max-width: 868px) {
   .time-display {
-    font-size:5rem; /* Larger than before even on mobile */
+    font-size:5.5rem; /* Larger than before even on mobile */
     min-width: 280px;
     padding: 12px 20px;
   }
@@ -1027,7 +1027,7 @@ body, html {
   }
   
   .time-display {
-    font-size: 3rem;
+    font-size: 10rem;
   }
 }
 
